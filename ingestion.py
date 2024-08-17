@@ -9,7 +9,17 @@ load_dotenv()
 
 if __name__ == "__main__":
     print("Ingestion...")
-    loader = TextLoader("/mbcet_website_data.txt")
+
+
+    # Use a custom loader that specifies UTF-8 encoding
+    # class CustomTextLoader(TextLoader):
+    #     def load(self):
+    #         with open(self.file_path, 'r', encoding='utf-8') as file:
+    #             return file.read()
+
+
+    # Create an instance of the custom loader
+    loader = TextLoader("C:/Users/johan/PycharmProjects/VectorDB_Intro/mbcet_website_data.txt")
     document = loader.load()
 
     print("splitting...")

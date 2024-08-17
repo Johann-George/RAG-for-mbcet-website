@@ -24,7 +24,7 @@ if __name__ == "__main__":
     embeddings = OllamaEmbeddings(model='llama3')
     llm = ChatOllama(model='llama3')
 
-    query = "Who is E-yanthra team?"
+    query = "What are the various awards won by the college?"
     # chain = PromptTemplate.from_template(template=query) | llm
     # result = chain.invoke(input={})
     # print(result.content)
