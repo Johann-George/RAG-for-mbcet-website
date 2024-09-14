@@ -4,7 +4,7 @@ from main import run_llm
 import streamlit as st
 from streamlit_chat import message
 
-st.header("Jovina - MBCET Chatbot")
+st.header("MBCET Chatbot")
 
 prompt = st.text_input("Prompt", placeholder="Enter your prompt here..")
 
