@@ -11,6 +11,8 @@ python-dotenv = "*"
 langchainhub = "*"
 black = "*"
 langchain-community = "*"
+streamlit = "*"
+streamlit-chat = "*"
 
 [dev-packages]
 
