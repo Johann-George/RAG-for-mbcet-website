@@ -15,15 +15,17 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 
-def run_llm(query: str, chat_history: List[Dict[str, Any]] = []):
+def run_llm(query: str, vectorstore: any, chat_history: List[Dict[str, Any]] = []):
     embeddings = OllamaEmbeddings(model='llama3')
     llm = ChatOllama(model='llama3')
 
-    vectorStore = PineconeVectorStore(
-        index_name=os.environ['INDEX_NAME'], embedding=embeddings
-    )
+    # vectorStore = PineconeVectorStore(
+    #     index_name=os.environ['INDEX_NAME'], embedding=embeddings
+    # )
 
-    retriever = vectorStore.as_retriever()
+    # retriever = vectorstore.as_retriever()
+
+    retriever = vectorstore.as_retriever()
 
     template = """
     Act as a receptionist for Mar Baselios College of engineering and technology and use the following pieces of context

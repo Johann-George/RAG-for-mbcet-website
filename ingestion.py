@@ -1,13 +1,19 @@
 import os
 from dotenv import load_dotenv
 from langchain_community.document_loaders import TextLoader
+from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import CharacterTextSplitter
-from langchain_pinecone import PineconeVectorStore
-from langchain_ollama import OllamaEmbeddings
+from typing import List, Dict, Any
+from langchain.chains.history_aware_retriever import create_history_aware_retriever
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_ollama import OllamaEmbeddings, ChatOllama
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain.chains.retrieval import create_retrieval_chain
 
 load_dotenv()
 
-if __name__ == "__main__":
+
+def vectorstore():
     print("Ingestion...")
 
     loader = TextLoader("C:/Users/johan/PycharmProjects/VectorDB_Intro/mbcet_website_data.txt")
@@ -23,6 +29,9 @@ if __name__ == "__main__":
 
     print("ingesting..")
 
-    PineconeVectorStore.from_documents(texts, embeddings, index_name=os.environ['INDEX_NAME'])
+    # PineconeVectorStore.from_documents(texts, embeddings, index_name=os.environ['INDEX_NAME'])
+    library = FAISS.from_documents(texts, embeddings)
 
     print("finish")
+
+    return library

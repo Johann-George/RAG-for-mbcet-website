@@ -1,6 +1,7 @@
 from main import run_llm
 import streamlit as st
 from streamlit_chat import message
+from ingestion import vectorstore
 
 st.header("MBCET Chatbot")
 
@@ -15,10 +16,12 @@ if "chat_answers_history" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
+vectorstore = vectorstore()
 
 if prompt:
     with st.spinner("Generating response.."):
-        generated_response = run_llm(query=prompt, chat_history=st.session_state["chat_history"])
+        generated_response = run_llm(query=prompt, vectorstore=vectorstore,
+                                     chat_history=st.session_state["chat_history"])
 
         st.session_state["user_prompt_history"].append(prompt)
         st.session_state["chat_answers_history"].append(generated_response["answer"])
