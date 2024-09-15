@@ -20,7 +20,7 @@ def run_llm(query: str, chat_history: List[Dict[str, Any]] = []):
     llm = ChatOllama(model='llama3')
 
     vectorStore = PineconeVectorStore(
-        index_name=os.environ["INDEX_NAME"], embedding=embeddings
+        index_name=os.environ['INDEX_NAME'], embedding=embeddings
     )
 
     retriever = vectorStore.as_retriever()
