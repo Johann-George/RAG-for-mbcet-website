@@ -16,7 +16,7 @@ load_dotenv()
 def vectorstore():
     print("Ingestion...")
 
-    loader = TextLoader("C:/Users/johan/PycharmProjects/VectorDB_Intro/mbcet_website_data.txt")
+    loader = TextLoader("./mbcet_website_data.txt")
     document = loader.load()
 
     print("splitting...")
