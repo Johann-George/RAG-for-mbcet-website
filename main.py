@@ -1,10 +1,9 @@
-import os
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
-from langchain_core.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
+from langchain_community.vectorstores import FAISS
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_ollama import OllamaEmbeddings, ChatOllama
-from langchain_pinecone import PineconeVectorStore
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains.retrieval import create_retrieval_chain
 
@@ -15,8 +14,9 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 
-def run_llm(query: str, vectorstore: any, chat_history: List[Dict[str, Any]] = []):
+def run_llm(query: str, chat_history: List[Dict[str, Any]] = []):
     embeddings = OllamaEmbeddings(model='llama3')
+
     llm = ChatOllama(model='llama3')
 
     # vectorStore = PineconeVectorStore(
@@ -24,6 +24,7 @@ def run_llm(query: str, vectorstore: any, chat_history: List[Dict[str, Any]] = [
     # )
 
     # retriever = vectorstore.as_retriever()
+    vectorstore = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
 
     retriever = vectorstore.as_retriever()
 
