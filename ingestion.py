@@ -1,8 +1,10 @@
+import os
 from dotenv import load_dotenv
 from langchain_community.document_loaders import TextLoader
-from langchain_community.vectorstores import FAISS
+from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
+from langchain_anthropic import ChatAnthropic
 
 load_dotenv()
 
@@ -22,9 +24,9 @@ if __name__ == "__main__":
 
     print("ingesting..")
 
-    # PineconeVectorStore.from_documents(texts, embeddings, index_name=os.environ['INDEX_NAME'])
-    library = FAISS.from_documents(texts, embeddings)
-
-    library.save_local("faiss_index")
+    PineconeVectorStore.from_documents(texts, embeddings, index_name=os.environ['INDEX_NAME'])
+    # library = FAISS.from_documents(texts, embeddings)
+    #
+    # library.save_local("faiss_index")
 
     print("finish")

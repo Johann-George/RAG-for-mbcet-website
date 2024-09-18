@@ -1,11 +1,19 @@
+import os
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
+from langchain_anthropic import ChatAnthropic
 from langchain_community.vectorstores import FAISS
+from langchain_core.language_models import BaseLLM
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_ollama import OllamaEmbeddings, ChatOllama
+
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains.retrieval import create_retrieval_chain
+from langchain_ollama import OllamaEmbeddings
+from langchain_pinecone import PineconeVectorStore
+from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
+from langchain_google_genai.llms import _BaseGoogleGenerativeAI
+
 
 load_dotenv()
 
@@ -17,14 +25,14 @@ def format_docs(docs):
 def run_llm(query: str, chat_history: List[Dict[str, Any]] = []):
     embeddings = OllamaEmbeddings(model='llama3')
 
-    llm = ChatOllama(model='llama3')
+    llm = ChatAnthropic(model="claude-3-sonnet-20240229")
 
-    # vectorStore = PineconeVectorStore(
-    #     index_name=os.environ['INDEX_NAME'], embedding=embeddings
-    # )
+    vectorstore = PineconeVectorStore(
+        index_name=os.environ['INDEX_NAME'], embedding=embeddings
+    )
 
     # retriever = vectorstore.as_retriever()
-    vectorstore = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+    # vectorstore = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
 
     retriever = vectorstore.as_retriever()
 
