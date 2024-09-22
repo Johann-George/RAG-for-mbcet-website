@@ -4,7 +4,6 @@ from langchain_community.document_loaders import TextLoader
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
-from langchain_anthropic import ChatAnthropic
 
 load_dotenv()
 
