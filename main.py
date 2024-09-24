@@ -21,11 +21,11 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 
-def run_llm(query: str, chat_history: List[Dict[str, Any]] = []):
+async def run_llm(query: str, chat_history: List[Dict[str, Any]] = []):
     embeddings = OllamaEmbeddings(model='llama3')
 
     # llm = ChatAnthropic(model="claude-3-sonnet-20240229")
-    llm = ChatOllama(model="llama3")
+    llm = ChatOllama(model="llama3", stream=True)
 
     vectorstore = PineconeVectorStore(
         index_name=os.environ['INDEX_NAME'], embedding=embeddings
@@ -77,13 +77,21 @@ def run_llm(query: str, chat_history: List[Dict[str, Any]] = []):
 
     rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
-    result = rag_chain.invoke({
+    # result = rag_chain.invoke({
+    #     "chat_history": chat_history,
+    #     "context": history_aware_retriever,
+    #     "question": query,
+    #     "input": query
+    # })
+    # return result
+    async for chunk in rag_chain.astream({
         "chat_history": chat_history,
-        "context": history_aware_retriever,
-        "question": query,
-        "input": query
-    })
-    return result
+            "context": history_aware_retriever,
+            "question": query,
+            "input": query
+    }):
+        yield chunk
+
 
 
 if __name__ == "__main__":

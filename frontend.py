@@ -1,3 +1,5 @@
+import asyncio
+
 from main import run_llm
 import streamlit as st
 from streamlit_chat import message
@@ -15,14 +17,31 @@ if "chat_answers_history" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
-if prompt:
-    with st.spinner("Generating response.."):
-        generated_response = run_llm(query=prompt, chat_history=st.session_state["chat_history"])
 
-        st.session_state["user_prompt_history"].append(prompt)
-        st.session_state["chat_answers_history"].append(generated_response["answer"])
-        st.session_state["chat_history"].append(("human", prompt))
-        st.session_state["chat_history"].append(("ai", generated_response["answer"]))
+async def handling_streaming_response(prompt):
+    response_container = st.empty()
+    full_response = ""
+
+    async for chunk in run_llm(query=prompt, chat_history=st.session_state["chat_history"]):
+        full_response += chunk
+        # response_container.markdown(f"**Bot:** {full_response}")
+
+    st.session_state["chat_answers_history"].append(full_response)
+    st.session_state["chat_history"].append(("ai", full_response))
+
+
+if prompt:
+    st.session_state["user_prompt_history"].append(prompt)
+    st.session_state["chat_history"].append(("human", prompt))
+
+    with st.spinner("Generating response.."):
+        asyncio.run(handling_streaming_response(prompt))
+        # generated_response = run_llm(query=prompt, chat_history=st.session_state["chat_history"])
+
+        # st.session_state["user_prompt_history"].append(prompt)
+        # st.session_state["chat_answers_history"].append(generated_response["answer"])
+        # st.session_state["chat_history"].append(("human", prompt))
+        # st.session_state["chat_history"].append(("ai", generated_response["answer"]))
 
 if st.session_state["chat_answers_history"]:
     for user_query, generated_response in zip(st.session_state["user_prompt_history"],
